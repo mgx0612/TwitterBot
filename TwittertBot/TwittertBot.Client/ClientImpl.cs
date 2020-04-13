@@ -5,6 +5,7 @@ using Tweetinvi.Parameters;
 
 namespace TwittertBot.Client
 {
+
     public static class ClientImpl
     {
         public static ITweet FindPopularTweetByHashTag(string key, string secret, string token, string hashtag)
@@ -17,12 +18,31 @@ namespace TwittertBot.Client
             return ts.Any() ? ts.First() : null;
         }
 
-        public static ITweet FindPopularTweetByHashTag(string hashtag)
-        {
-            var key = "api key";
-            var secret = "api secret";
-            var token = "bearer token";
-            return FindPopularTweetByHashTag(key, secret, token, hashtag);
-        }
     }
+
+    public interface ITwitterOps
+    {
+        public ITweet FindPopularTweetByHashTag(string hashtag);
+    }
+
+    public class TwitterOpsImpl : ITwitterOps
+    {
+        private readonly string _key;
+        private readonly string _secret;
+        private readonly string _token;
+        public TwitterOpsImpl(string key, string secret, string token)
+        {
+            _key = key;
+            _secret = secret;
+            _token = token;
+        }
+
+
+        public ITweet FindPopularTweetByHashTag(string hashtag)
+        {
+            return ClientImpl.FindPopularTweetByHashTag(this._key, this._secret, this._token, hashtag);
+        }
+
+    }
+
 }
